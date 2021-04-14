@@ -1,6 +1,6 @@
-displayName = Customizable Bee Stripes
+displayName = Customizable Bee Colors
 author = Castled
-version = 0.1.2
+version = 0.2
 homepage = https://forums.terraria.org/index.php?threads/customizable-bee-stripes-a-niche-texture-modification-mod.104798/
 includePDB = true
 side = Client

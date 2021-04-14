@@ -45,7 +45,7 @@ namespace BeeMod
                     TextureHelper.PlayerFB,
                     TextureHelper.PlayerBArm
                 };
-        internal static List<IndexedColor> colors = new List<IndexedColor>
+        internal static List<IndexedColor> colorStripes = new List<IndexedColor>
         {
             new IndexedColor(new Color(0, 0, 0), 1), // 1
             new IndexedColor(new Color(12, 7, 23), 2), // 2
@@ -66,17 +66,57 @@ namespace BeeMod
             new IndexedColor(new Color(22, 19, 0), 16), // 16
             new IndexedColor(new Color(38, 27, 0), 17) // 17
         };
+        internal static List<IndexedColor> colorBase = new List<IndexedColor>
+        {
+            new IndexedColor(new Color(54, 20, 1), -1), // 1
+            new IndexedColor(new Color(140, 81, 49), -2), // 2
+            new IndexedColor(new Color(254, 246, 37), -3), // 3
+            new IndexedColor(new Color(254, 194, 20), -4), // 4
+            new IndexedColor(new Color(212, 131, 11), -5), // 5
+            new IndexedColor(new Color(87, 39, 13), -6), // 6
+            new IndexedColor(new Color(61, 46, 39), -7), // 7
+            new IndexedColor(new Color(117, 52, 18), -8), // 8
+            new IndexedColor(new Color(150, 67, 22), -9), // 9
+            new IndexedColor(new Color(230, 227, 73), -10), // 10
+            new IndexedColor(new Color(179, 80, 27), -11), // 11
+            new IndexedColor(new Color(186, 136, 22), -12), // 12
+            new IndexedColor(new Color(186, 135, 22), -13), // 13
+            new IndexedColor(new Color(184, 133, 21), -14), // 14
+            new IndexedColor(new Color(187, 136, 24), -15), // 15
+            new IndexedColor(new Color(186, 170, 22), -16), // 16
+            new IndexedColor(new Color(227, 223, 69), -17), // 17
+            new IndexedColor(new Color(232, 228, 74), -18), // 18
+            new IndexedColor(new Color(209, 207, 67), -19), // 19
+            new IndexedColor(new Color(232, 229, 74), -20), // 20
+            new IndexedColor(new Color(242, 241, 145), -21), // 21
+            new IndexedColor(new Color(186, 132, 22), -22), //22
+            new IndexedColor(new Color(180, 111, 30), -23), //23
+            new IndexedColor(new Color(73, 32, 11), -24), //24
+            //Bee Set
+            new IndexedColor(new Color(255, 140, 0), -25), // 25
+            new IndexedColor(new Color(255, 197, 35), -26), // 26
+            new IndexedColor(new Color(255, 243, 82), -27), // 27
+            new IndexedColor(new Color(255, 238, 0), -28), // 28
+            new IndexedColor(new Color(255, 230, 68), -29), // 29
+            new IndexedColor(new Color(255, 243, 85), -30), // 30
+            new IndexedColor(new Color(255, 238, 60), -31), // 31
+            new IndexedColor(new Color(255, 241, 45), -32), // 32
+            new IndexedColor(new Color(255, 153, 0), -33), // 33
+            new IndexedColor(new Color(222, 207, 0), -34), // 34
+            //Other
+            new IndexedColor(new Color(165, 100, 23), -35),
+        };
         internal bool[] vanityAdded = new bool[6];
         public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
         {
-            if (ModContent.GetInstance<BeeModConfig>().rainbowSprite && instance.canUpdateColor && ++instance.colorUpdate > ModContent.GetInstance<BeeModConfig>().rainbowSpriteDelay)
+            if ((ModContent.GetInstance<BeeConfig1>().rainbowSprite || ModContent.GetInstance<BeeConfig2>().rainbowSprite) && instance.canUpdateColor && ++instance.colorUpdate > ModContent.GetInstance<BeeConfig1>().rainbowSpriteDelay)
             {
                 UpdateSets();
                 instance.colorUpdate = 0;
                 //Main.NewText(Main.DiscoColor);
             }
             //Main.NewText(Main.armorHeadTexture[60] == null);
-            if (ModContent.GetInstance<BeeModConfig>().colSpriteVanity)
+            if (ModContent.GetInstance<BeeConfig3>().colSpriteVanity)
                 AttemptVanityAdd();
             void AttemptVanityAdd()
             {
@@ -115,28 +155,21 @@ namespace BeeMod
         public override void Load()
         {
             instance = this;
-            if (ModContent.GetInstance<BeeModConfig>().colSpriteNPC)
+            Main.instance.LoadNPC(NPCID.QueenBee);
+            Main.instance.LoadNPC(NPCID.Bee);
+            Main.instance.LoadNPC(NPCID.BeeSmall);
+            instance.vanillaTextures.Add(new TextureHelper(TextureHelper.NPC, NPCID.QueenBee, Main.npcTexture[NPCID.QueenBee]));
+            instance.vanillaTextures.Add(new TextureHelper(TextureHelper.NPC, NPCID.Bee, Main.npcTexture[NPCID.Bee]));
+            instance.vanillaTextures.Add(new TextureHelper(TextureHelper.NPC, NPCID.BeeSmall, Main.npcTexture[NPCID.BeeSmall]));
+            instance.vanillaTextures.Add(new TextureHelper(TextureHelper.BossHead, 14, Main.npcHeadBossTexture[14]));
+            for (int a = 0; a < Main.itemTexture.Length; a++)
             {
-                Main.instance.LoadNPC(NPCID.QueenBee);
-                Main.instance.LoadNPC(NPCID.Bee);
-                Main.instance.LoadNPC(NPCID.BeeSmall);
-                instance.vanillaTextures.Add(new TextureHelper(TextureHelper.NPC, NPCID.QueenBee, Main.npcTexture[NPCID.QueenBee]));
-                instance.vanillaTextures.Add(new TextureHelper(TextureHelper.NPC, NPCID.Bee, Main.npcTexture[NPCID.Bee]));
-                instance.vanillaTextures.Add(new TextureHelper(TextureHelper.NPC, NPCID.BeeSmall, Main.npcTexture[NPCID.BeeSmall]));
-                instance.vanillaTextures.Add(new TextureHelper(TextureHelper.BossHead, 14, Main.npcHeadBossTexture[14]));
+                if (beeItem.Contains(a))
+                    vanillaTextures.Add(new TextureHelper(TextureHelper.Item, a, Main.itemTexture[a]));
             }
-            if (ModContent.GetInstance<BeeModConfig>().colSpriteItems)
-            {
-                for (int a = 0; a < Main.itemTexture.Length; a++)
-                {
-                    if (beeItem.Contains(a))
-                        vanillaTextures.Add(new TextureHelper(TextureHelper.Item, a, Main.itemTexture[a]));
-                }
-                Main.instance.LoadProjectile(ProjectileID.Beenade);
-                instance.vanillaTextures.Add(new TextureHelper(TextureHelper.Projectile, ProjectileID.Beenade, Main.projectileTexture[ProjectileID.Beenade]));
-            }
-            if (ModContent.GetInstance<BeeModConfig>().colSpriteGore)
-                for (int a = 0; a < Main.goreTexture.Length; a++)
+            Main.instance.LoadProjectile(ProjectileID.Beenade);
+            instance.vanillaTextures.Add(new TextureHelper(TextureHelper.Projectile, ProjectileID.Beenade, Main.projectileTexture[ProjectileID.Beenade]));
+            for (int a = 0; a < Main.goreTexture.Length; a++)
             {
                 if (QBGore.Contains(a))
                 {
@@ -144,8 +177,7 @@ namespace BeeMod
                     vanillaTextures.Add(new TextureHelper(TextureHelper.Gore, a, Main.goreTexture[a]));
                 }
             }
-            if (ModContent.GetInstance<BeeModConfig>().colSpriteMount)
-                instance.vanillaTextures.Add(new TextureHelper(TextureHelper.Mount, MountID.Bee, Main.beeMountTexture[0]));
+            instance.vanillaTextures.Add(new TextureHelper(TextureHelper.Mount, MountID.Bee, Main.beeMountTexture[0]));
         }
         public override void Unload()
         {
@@ -159,10 +191,30 @@ namespace BeeMod
             for (int a = 0; a < instance.vanillaTextures.Count; a++)
             {
                 TextureHelper tH = instance.vanillaTextures[a];
-                if (tH.operationsDetermined)
-                    UpdateTextures(ref tH);
+                if (tH.operationsDetermined && CanChange(tH))
+                {
+                    if (ModContent.GetInstance<BeeConfig1>().stripes)
+                        UpdateTextures(ref tH, false);
+                    if (ModContent.GetInstance<BeeConfig2>().beeBase)
+                        UpdateTextures(ref tH, true);
+                }
                 else
                     DetermineOperations(tH);
+            }
+            bool CanChange(TextureHelper t)
+            {
+                BeeConfig3 config = ModContent.GetInstance<BeeConfig3>();
+                if (TextureHelper.IsItemType(t) && config.colSpriteItems)
+                    return true;
+                if (t.imgType == TextureHelper.Mount && config.colSpriteMount)
+                    return true;
+                if (t.imgType == TextureHelper.Gore && config.colSpriteGore)
+                    return true;
+                if ((t.imgType == TextureHelper.NPC || t.imgType == TextureHelper.BossHead) && config.colSpriteNPC)
+                    return true;
+                if (TextureHelper.IsArmorType(t) && config.colSpriteVanity)
+                    return true;
+                return false;
             }
             void DetermineOperations(TextureHelper t)
             {
@@ -181,12 +233,25 @@ namespace BeeMod
                     t.operations[a] = 0;
                     if (array[a] != Color.Transparent)
                     {
-                        for (int b = 0; b < colors.Count; b++)
+                        bool foundStripes = false;
+                        for (int b = 0; b < colorStripes.Count; b++)
                         {
-                            if (array[a] == colors[b].color)
+                            if (array[a] == colorStripes[b].color)
                             {
-                                t.operations[a] = colors[b].index;
+                                t.operations[a] = colorStripes[b].index;
+                                foundStripes = true;
                                 break;
+                            }
+                        }
+                        if (!foundStripes)
+                        {
+                            for (int b = 0; b < colorBase.Count; b++)
+                            {
+                                if (array[a] == colorBase[b].color)
+                                {
+                                    t.operations[a] = colorBase[b].index;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -245,12 +310,25 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                bool foundStripes = false;
+                                for (int b = 0; b < colorStripes.Count; b++)
                                 {
-                                    if (colors[b].index == tH.operations[a])
+                                    if (colorStripes[b].index == tH.operations[a])
                                     {
-                                        array[a] = colors[b].color;
+                                        array[a] = colorStripes[b].color;
+                                        foundStripes = true;
                                         break;
+                                    }
+                                }
+                                if (!foundStripes)
+                                {
+                                    for (int b = 0; b < colorBase.Count; b++)
+                                    {
+                                        if (colorBase[b].index == tH.operations[a])
+                                        {
+                                            array[a] = colorBase[b].color;
+                                            break;
+                                        }
                                     }
                                 }
                             }
@@ -260,9 +338,10 @@ namespace BeeMod
                 }
             }
         }
-        internal void UpdateTextures(ref TextureHelper t)
+        internal void UpdateTextures(ref TextureHelper t, bool isBase)
         {
-            int divider = ModContent.GetInstance<BeeModConfig>().colorIntensity;
+            List<IndexedColor> theList = isBase ? colorBase : colorStripes;
+            int divider = isBase ? ModContent.GetInstance<BeeConfig2>().colorIntensity : ModContent.GetInstance<BeeConfig1>().colorIntensity;
             Texture2D bee = ModContent.GetTexture("BeeMod/Content/RainbowBee/Bee");
             Color[] bitmap = new Color[bee.Width * bee.Height];
             bee.GetData(bitmap);
@@ -270,7 +349,6 @@ namespace BeeMod
             Texture2D beeArmor = ModContent.GetTexture("BeeMod/Content/RainbowBee/BeeArmor");
             Color[] bitmapArmor = new Color[beeArmor.Width * beeArmor.Height];
             beeArmor.GetData(bitmapArmor);
-
             switch (t.imgType)
             {
                 case TextureHelper.Item:
@@ -281,11 +359,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -302,11 +380,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -323,11 +401,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -346,11 +424,11 @@ namespace BeeMod
                             {
                                 if (array[a] != Color.Transparent)
                                 {
-                                    for (int b = 0; b < colors.Count; b++)
+                                    for (int b = 0; b < theList.Count; b++)
                                     {
-                                        if (colors[b].index == t.operations[a])
+                                        if (theList[b].index == t.operations[a])
                                         {
-                                            array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                            array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                             break;
                                         }
                                     }
@@ -368,11 +446,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -389,11 +467,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -410,11 +488,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -431,11 +509,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -452,11 +530,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -473,11 +551,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -494,11 +572,11 @@ namespace BeeMod
                         {
                             if (array[a] != Color.Transparent)
                             {
-                                for (int b = 0; b < colors.Count; b++)
+                                for (int b = 0; b < theList.Count; b++)
                                 {
-                                    if (colors[b].index == t.operations[a])
+                                    if (theList[b].index == t.operations[a])
                                     {
-                                        array[a] = new Color(Monochrome(colors[b].color).R + UpdateColor().R / divider, Monochrome(colors[b].color).G + UpdateColor().G / divider, Monochrome(colors[b].color).B + UpdateColor().B / divider, Monochrome(colors[b].color).A + UpdateColor().A / divider);
+                                        array[a] = new Color(Monochrome(theList[b].color).R + UpdateColor(isBase).R / divider, Monochrome(theList[b].color).G + UpdateColor(isBase).G / divider, Monochrome(theList[b].color).B + UpdateColor(isBase).B / divider, Monochrome(theList[b].color).A + UpdateColor(isBase).A / divider);
                                         break;
                                     }
                                 }
@@ -508,25 +586,55 @@ namespace BeeMod
                     }
                     break;
             }
-            Color Monochrome(Color color) => new Color(color.B, color.B, color.B, color.A);
-            Color UpdateColor()
+            Color Monochrome(Color color)
             {
-                if (ModContent.GetInstance<BeeModConfig>().rainbowSprite)
-                    return Main.DiscoColor;
-                return ModContent.GetInstance<BeeModConfig>().SetColor;
+                int divide = isBase ? 3 : 1;
+                int a = DecideColor();
+                int DecideColor()
+                {
+                    if (color.R >= color.G && color.R >= color.B)
+                        return color.R;
+                    if (color.G >= color.R && color.G >= color.B)
+                        return color.G;
+                    if (color.B >= color.G && color.B >= color.R)
+                        return color.B;
+                    return 0;
+                }
+                return new Color(a / divide, a / divide, a / divide, color.A);
+            };
+            Color UpdateColor(bool colorBase)
+            {
+                if (!colorBase)
+                {
+                    if (ModContent.GetInstance<BeeConfig1>().rainbowSprite)
+                        return Main.DiscoColor;
+                    return ModContent.GetInstance<BeeConfig1>().SetColor;
+                }
+                else
+                {
+                    if (ModContent.GetInstance<BeeConfig2>().rainbowSprite)
+                        return Main.DiscoColor;
+                    return ModContent.GetInstance<BeeConfig2>().SetColor;
+                }
             }
         }
     }
+    #region Config Menus
     [Label("Bee Stripes Configuration")]
-    internal class BeeModConfig : ModConfig
+    internal class BeeConfig1 : ModConfig
     {
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
-        [Header("[i:1129] [i:2870] [C/FFAF19:Apiarist's Magic]")]
+        [Header("[i:1129] [i:2870] [C/FFAF19:Apiarist's Magic (Stripes)]")]
+
+        [DefaultValue(true)]
+        [Label("Change Bee Stripes")]
+        [Tooltip("When custom bee colors are enabled, all dark colors on bee related textures will be affected")]
+        public bool stripes;
 
         [DefaultValue(false)]
         [Label("Rainbow Bee Stripes")]
-        [Tooltip("When custom bee stripes colors are enabled, all dark colors on bee related textures will have a rainbow hue\nIf this is enabled, it will override the custom color set above this config.\nWarning: May cause performance issues if the 'Rainbow Bee Stripes Delay' config is set to a low value")]
+        [Tooltip("When custom bee colors are enabled, all dark colors on bee related textures will have a rainbow hue\nIf this is enabled, it will override the custom color set above this config.\nWarning: May cause performance issues.")]
         public bool rainbowSprite;
 
         [Range(1, 60)]
@@ -537,7 +645,7 @@ namespace BeeMod
 
         [Range(1, 10)]
         [DefaultValue(4)]
-        [Label("Custom Bee Stripes Intensity Reducer")]
+        [Label("Custom Bee Stripes Color Intensity Reducer")]
         [Tooltip("Changes the intensity of the set colors\nSetting a higher number will reduce the intensity")]
         public int colorIntensity;
 
@@ -545,38 +653,6 @@ namespace BeeMod
         [Label("Custom Bee Stripes Hue")]
         [Tooltip("When custom bee stripes colors are enabled, all dark colors on bee related textures will have a hue of this color")]
         public Color SetColor { get; set; }
-
-        [Header("[i:1129] [i:3611] [C/FFAF19:Apiarist's Magic (Custom Bee Stripes Menu)]")]
-
-        [DefaultValue(false)]
-        [Label("Custom Bee Stripes (Items) [R]")]
-        [Tooltip("The Stripes and/or dark colors of Queen Bee weapons and Queen Bee's treasure bag are affected\nNote: A reload is required to change this config")]
-        [ReloadRequired]
-        public bool colSpriteItems;
-
-        [DefaultValue(false)]
-        [Label("Custom Bee Stripes (Equipment) [R]")]
-        [Tooltip("The Stripes and/or dark colors of the Bee Set and Queen Bee Mask are affected\nNote: A reload is required to change this config")]
-        [ReloadRequired]
-        public bool colSpriteVanity;
-
-        [DefaultValue(false)]
-        [Label("Custom Bee Stripes (NPCs) [R]")]
-        [Tooltip("Stripes and/or dark colors of the Queen Bee (and bees in general) are affected\nNote: this will also affect Queen Bee's Boss-Head Texture\nNote 2 | Electric Boogaloo: A reload is required to change this config")]
-        [ReloadRequired]
-        public bool colSpriteNPC;
-
-        [DefaultValue(false)]
-        [Label("Custom Bee Stripes (Bee Mount) [R]")]
-        [Tooltip("The Stripes and/or dark colors of the Bee Mount are affected\nNote: A reload is required to change this config")]
-        [ReloadRequired]
-        public bool colSpriteMount;
-
-        [DefaultValue(false)]
-        [Label("Custom Bee Stripes (Gore) [R]")]
-        [Tooltip("Stripes and/or dark colors of Queen Bee gore are affected\nNote: A reload is required to change this config")]
-        [ReloadRequired]
-        public bool colSpriteGore;
         public override void OnChanged() 
         { 
             if (BeeMod.instance != null)
@@ -586,6 +662,90 @@ namespace BeeMod
             }
         }
     }
+    [Label("Bee Base Configuration")]
+    internal class BeeConfig2 : ModConfig
+    {
+        public override ConfigScope Mode => ConfigScope.ClientSide;
+
+        [Header("[i:1129] [i:2870] [C/FFAF19:Apiarist's Magic (Base)]")]
+
+        [DefaultValue(true)]
+        [Label("Change Bee Base")]
+        [Tooltip("When custom bee colors are enabled, all yellow-ish colors on bee related textures will be affected")]
+        public bool beeBase;
+
+        [DefaultValue(false)]
+        [Label("Rainbow Bee Base")]
+        [Tooltip("When custom bee colors are enabled, all yellow-ish colors on bee related textures will have a rainbow hue\nIf this is enabled, it will override the custom color set above this config.\nWarning: May cause performance issues.")]
+        public bool rainbowSprite;
+
+        [Range(1, 60)]
+        [DefaultValue(15)]
+        [Label("Rainbow Bee Base Delay")]
+        [Tooltip("Changes the frequency of how often the 'Rainbow Bee Base' changes color, in ticks.")]
+        public int rainbowSpriteDelay;
+
+        [Range(1, 10)]
+        [DefaultValue(4)]
+        [Label("Custom Bee Base Color Intensity Reducer")]
+        [Tooltip("Changes the intensity of the set colors\nSetting a higher number will reduce the intensity")]
+        public int colorIntensity;
+
+        [DefaultValue(typeof(Color), "155, 1, 125, 255")]
+        [Label("Custom Bee Base Hue")]
+        [Tooltip("When custom bee base colors are enabled, all yellow-ish colors on bee related textures will have a hue of this color")]
+        public Color SetColor { get; set; }
+        public override void OnChanged()
+        {
+            if (BeeMod.instance != null)
+            {
+                BeeMod.instance.RevertAllTextures();
+                BeeMod.instance.canUpdateColor = false;
+            }
+        }
+    }
+    [Label("Modifiable Texture Types")]
+    internal class BeeConfig3 : ModConfig
+    {
+        public override ConfigScope Mode => ConfigScope.ClientSide;
+
+        [Header("[i:1129] [i:3611] [C/FFAF19:Apiarist's Magic (Custom Bee Stripes Menu)]")]
+
+        [DefaultValue(false)]
+        [Label("Custom Bee colors (Items) [i/1:1123]")]
+        [Tooltip("The chosen colors of Queen Bee drops are affected\nNote: A reload is required to change this config")]
+        public bool colSpriteItems;
+
+        [DefaultValue(false)]
+        [Label("Custom Bee colors (Equipment) [i/1:843]")]
+        [Tooltip("The chosen colors of the Bee Set and Queen Bee Mask are affected\nNote: A reload is required to change this config")]
+        public bool colSpriteVanity;
+
+        [DefaultValue(false)]
+        [Label("Custom Bee colors (NPCs) [i/1:1364]")]
+        [Tooltip("The chosen colors of the Queen Bee (and bees in general) are affected\nNote: this will also affect Queen Bee's Boss-Head Texture\nNote 2 | Electric Boogaloo: A reload is required to change this config")]
+        public bool colSpriteNPC;
+
+        [DefaultValue(false)]
+        [Label("Custom Bee colors (Bee Mount) [i/1:2502]")]
+        [Tooltip("The chosen colors of the Bee Mount are affected\nNote: A reload is required to change this config")]
+        public bool colSpriteMount;
+
+        [DefaultValue(false)]
+        [Label("Custom Bee colors (Gore) [i/1:1521]")]
+        [Tooltip("The chosen colors of Queen Bee gore are affected\nNote: A reload is required to change this config")]
+        public bool colSpriteGore;
+
+        public override void OnChanged()
+        {
+            if (BeeMod.instance != null)
+            {
+                BeeMod.instance.RevertAllTextures();
+                BeeMod.instance.canUpdateColor = false;
+            }
+        }
+    }
+    #endregion
     internal class TextureHelper
     {
         public const int Item = 0;
@@ -610,7 +770,8 @@ namespace BeeMod
             ID = type;
             cache = save;
         }
-
+        public static bool IsArmorType(TextureHelper t) => t.imgType == PlayerH || t.imgType == PlayerB || t.imgType == PlayerFB || t.imgType == PlayerBArm || t.imgType == PlayerLeg;
+        public static bool IsItemType(TextureHelper t) => t.imgType == Item || t.imgType == Projectile;
         public override string ToString()
         {
             string width = cache != null ? $"{cache.Width}" : "null";
@@ -638,7 +799,7 @@ namespace BeeMod
 
         public override string Description
         {
-            get { return "Toggles Custom Bee Colors"; }
+            get { return "Toggles Custom Bee colors"; }
         }
 
         public override void Action(CommandCaller caller, string input, string[] args) 
@@ -646,7 +807,7 @@ namespace BeeMod
             BeeMod.instance.canUpdateColor = !BeeMod.instance.canUpdateColor;
             if (!BeeMod.instance.canUpdateColor)
                 BeeMod.instance.RevertAllTextures();
-            if (BeeMod.instance.canUpdateColor && !ModContent.GetInstance<BeeModConfig>().rainbowSprite)
+            if (BeeMod.instance.canUpdateColor && !ModContent.GetInstance<BeeConfig1>().rainbowSprite)
                 BeeMod.instance.UpdateSets();
         }
     }
