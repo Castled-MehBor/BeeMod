@@ -1,0 +1,15 @@
+Customizable Bee Stripes provides a config menu that allows you to be able to change the dark colors of various bee related textures, to either apply your own color of preference or a rainbow color if you're feeling all over the place.
+
+In order to properly use this mod, make sure that the 'Custom Bee Stripes Menu' config has something that you would like to change the texture of, then, when you're ingame, type in the command /beecolor in the chat to toggle on and off the effect.
+
+Whenever you change something in any of the two categories available, it will reset all of the textures; you can simply type /beecolor to enable the effect again.
+Changing anything in 'Custom Bee Stripes Menu' besides the 'Custom Bee Stripes Hue' config will require a reload
+
+This is a client side mod, meaning:
+- If you're the host of a server and you have this enabled, no one else needs to have it enabled in order to join.
+- If you're joining someone and you have this mod enabled, but they don't, it will still remain enabled for you.
+- The modified textures will only affect your screen, and no one elses.
+
+It's a very niche mod, I know, but sometimes it would be nice to have just a bit of customization in some commonly experienced pre-hardmode content.
+
+Credit to FullOfXP for helping with multiplayer testing.
